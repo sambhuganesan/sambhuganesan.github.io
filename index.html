@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Portfolio</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a2e, #16213e);
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00d4ff;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transition: all 0.1s ease;
+            background: rgba(0, 212, 255, 0.1);
+            backdrop-filter: blur(2px);
+        }
+
+        .cursor.hover {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 212, 255, 0.3);
+            border-color: #ff6b6b;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00d4ff, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links li a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid transparent;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links li a:hover {
+            border-color: #00d4ff;
+            background: linear-gradient(45deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 107, 0.2));
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Main Content */
+        .content {
+            margin-top: 80px;
+            padding: 50px;
+        }
+
+        .section {
+            display: none;
+            min-height: 80vh;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Home Section */
+        .hero {
+            text-align: center;
+            padding: 100px 0;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #00d4ff, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.5));
+            }
+
+            to {
+                filter: drop-shadow(0 0 30px rgba(255, 107, 107, 0.5));
+            }
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #cccccc;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: #ff6b6b;
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+            animation: shimmer 1.5s ease-in-out;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+        }
+
+        .project-card h3 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .project-card p {
+            color: #cccccc;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .project-link {
+            display: inline-block;
+            padding: 8px 16px;
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .project-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+        }
+
+        /* Blog Section */
+        .blog-post {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #00d4ff;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .blog-post:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(10px);
+        }
+
+        .blog-post h3 {
+            color: #ff6b6b;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .blog-post .date {
+            color: #00d4ff;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        /* About Section */
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .profile-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 4px solid #00d4ff;
+            margin: 0 auto 30px;
+            background: linear-gradient(45deg, #00d4ff, #ff6b6b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            transition: all 0.3s ease;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05) rotate(5deg);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.3);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .social-link {
+            display: inline-block;
+            padding: 12px;
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid #00d4ff;
+            border-radius: 50%;
+            color: #00d4ff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: #00d4ff;
+            color: #000;
+            transform: translateY(-5px) rotate(360deg);
+        }
+
+        /* Section Headers */
+        .section h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 50px;
+            background: linear-gradient(45deg, #00d4ff, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(45deg, #00d4ff, #ff6b6b);
+            border-radius: 2px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+
+            .nav-links li a {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Floating particles background effect */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00d4ff;
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cursor"></div>
+    <div class="particles"></div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo">Portfolio</div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showSection('home')">Home</a></li>
+                <li><a href="#" onclick="showSection('projects')">Projects</a></li>
+                <li><a href="#" onclick="showSection('blog')">Math Blog</a></li>
+                <li><a href="#" onclick="showSection('about')">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="content">
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <div class="hero">
+                <h1>Welcome to My Universe</h1>
+                <p>Exploring the intersection of code, mathematics, and creativity. Here you'll find my projects,
+                    thoughts on mathematical concepts, and a glimpse into my digital world.</p>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="section">
+            <h2>Projects & Code</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <h3>Neural Network Visualizer</h3>
+                    <p>Interactive web application for visualizing neural network architectures and training processes.
+                        Built with JavaScript and WebGL for smooth animations.</p>
+                    <a href="#" class="project-link">View Project</a>
+                </div>
+                <div class="project-card">
+                    <h3>Fractal Generator</h3>
+                    <p>Real-time fractal generation tool with customizable parameters. Explores mathematical beauty
+                        through the Mandelbrot set and Julia sets.</p>
+                    <a href="#" class="project-link">View Project</a>
+                </div>
+                <div class="project-card">
+                    <h3>Algorithm Playground</h3>
+                    <p>Collection of sorting and pathfinding algorithms with visual demonstrations. Perfect for learning
+                        and teaching computer science concepts.</p>
+                    <a href="#" class="project-link">View Project</a>
+                </div>
+                <div class="project-card">
+                    <h3>3D Math Visualizer</h3>
+                    <p>Interactive 3D plots for mathematical functions and surfaces. Uses Three.js to render complex
+                        mathematical concepts in an intuitive way.</p>
+                    <a href="#" class="project-link">View Project</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog Section -->
+        <section id="blog" class="section">
+            <h2>Math Blog</h2>
+            <div class="blog-post">
+                <div class="date">September 20, 2025</div>
+                <h3>The Beauty of Euler's Identity</h3>
+                <p>Exploring one of the most elegant equations in mathematics:</p>
+                <p>$$e^{i\pi} + 1 = 0$$</p>
+                <p>This remarkable formula connects five of the most important numbers in mathematics: e, i, π, 1, and
+                    0. It beautifully demonstrates the deep relationship between exponential functions and trigonometry
+                    through Euler's formula.</p>
+            </div>
+            <div class="blog-post">
+                <div class="date">September 15, 2025</div>
+                <h3>Understanding Linear Transformations</h3>
+                <p>Linear transformations are fundamental to linear algebra. A transformation T: ℝⁿ → ℝᵐ is linear if:
+                </p>
+                <p>$$T(\mathbf{u} + \mathbf{v}) = T(\mathbf{u}) + T(\mathbf{v})$$</p>
+                <p>$$T(c\mathbf{u}) = cT(\mathbf{u})$$</p>
+                <p>These properties make linear transformations powerful tools for understanding geometric operations
+                    like rotations, reflections, and scaling.</p>
+            </div>
+            <div class="blog-post">
+                <div class="date">September 10, 2025</div>
+                <h3>The Riemann Zeta Function</h3>
+                <p>The Riemann zeta function is defined as:</p>
+                <p>$$\zeta(s) = \sum_{n=1}^{\infty} \frac{1}{n^s}$$</p>
+                <p>This function is central to number theory and the famous Riemann Hypothesis, one of the most
+                    important unsolved problems in mathematics.</p>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <h2>About Me</h2>
+            <div class="about-content">
+                <div class="profile-image">👨‍💻</div>
+                <h3 style="color: #00d4ff; margin-bottom: 20px;">Your Name Here</h3>
+                <p style="line-height: 1.8; color: #cccccc; margin-bottom: 20px;">
+                    I'm a passionate developer and mathematics enthusiast who loves exploring the intersection of code
+                    and mathematical concepts. When I'm not building applications, you can find me diving deep into
+                    number theory, linear algebra, or working on algorithmic challenges.
+                </p>
+                <p style="line-height: 1.8; color: #cccccc; margin-bottom: 20px;">
+                    My journey in programming started with a fascination for how mathematical principles can be
+                    translated into elegant code. I enjoy creating visualizations that make complex concepts accessible
+                    and building tools that solve real-world problems.
+                </p>
+                <p style="line-height: 1.8; color: #cccccc;">
+                    Always eager to learn and collaborate on interesting projects that push the boundaries of what's
+                    possible with technology.
+                </p>
+                <div class="social-links">
+                    <a href="#" class="social-link">📧</a>
+                    <a href="#" class="social-link">💼</a>
+                    <a href="#" class="social-link">🐙</a>
+                    <a href="#" class="social-link">🐦</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Custom cursor
+        const cursor = document.querySelector('.cursor');
+        const hoverElements = document.querySelectorAll('a, button, .project-card, .blog-post');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // Navigation
+        function showSection(sectionName) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionName).classList.add('active');
+        }
+
+        // Particle system
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles');
+
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+
+            // Configure MathJax
+            window.MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']],
+                    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+                }
+            };
+        });
+
+        // Smooth scrolling for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+            });
+        });
+    </script>
+</body>
+
+</html>
