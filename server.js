@@ -55,6 +55,6 @@ app.listen(PORT, () => {
     console.log(`=== SERVER STARTED ===`);
     console.log(`Server running on port ${PORT}`);
     console.log('Available env vars:', Object.keys(process.env).filter(k => k.startsWith('FIREBASE') || k === 'ADMIN_PASSWORD'));
-    console.log('FIREBASE_API_KEY:', process.env.FIREBASE_API_KEY || 'NOT FOUND');
+    console.log('FIREBASE_CLIENT_API_KEY:', process.env.FIREBASE_CLIENT_API_KEY || 'NOT FOUND');
     console.log('ADMIN_PASSWORD:', process.env.ADMIN_PASSWORD || 'NOT FOUND');
 });
