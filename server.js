@@ -1,4 +1,6 @@
-require('dotenv').config();
+// Remove or comment out this line:
+// require('dotenv').config();
+
 const express = require('express');
 const path = require('path');
 const app = express();
@@ -19,12 +21,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 
-// API endpoint for Firebase config with detailed logging
+// API endpoint for Firebase config
 app.get('/api/config', (req, res) => {
     console.log('=== CONFIG ENDPOINT HIT ===');
-    console.log('Environment variables check:');
-    console.log('FIREBASE_API_KEY:', process.env.FIREBASE_API_KEY ? 'EXISTS' : 'MISSING');
-    console.log('FIREBASE_PROJECT_ID:', process.env.FIREBASE_PROJECT_ID ? 'EXISTS' : 'MISSING');
+    console.log('All env vars:', Object.keys(process.env));
+    console.log('FIREBASE_API_KEY:', process.env.FIREBASE_API_KEY);
+    console.log('FIREBASE_PROJECT_ID:', process.env.FIREBASE_PROJECT_ID);
 
     const config = {
         apiKey: process.env.FIREBASE_API_KEY,
@@ -36,21 +38,21 @@ app.get('/api/config', (req, res) => {
         measurementId: process.env.FIREBASE_MEASUREMENT_ID
     };
 
-    console.log('Sending config:', JSON.stringify(config, null, 2));
+    console.log('Config being sent:', config);
     res.json(config);
 });
 
 // API endpoint for admin authentication
 app.post('/api/verify-admin', (req, res) => {
     console.log('=== VERIFY ADMIN HIT ===');
-    console.log('ADMIN_PASSWORD env:', process.env.ADMIN_PASSWORD ? 'EXISTS' : 'MISSING');
+    console.log('ADMIN_PASSWORD:', process.env.ADMIN_PASSWORD);
     const { password } = req.body;
     const isValid = password === process.env.ADMIN_PASSWORD;
     console.log('Password valid:', isValid);
     res.json({ isValid });
 });
 
-// Health check endpoint
+// Health check
 app.get('/health', (req, res) => {
     res.json({ status: 'ok' });
 });
@@ -58,8 +60,7 @@ app.get('/health', (req, res) => {
 app.listen(PORT, () => {
     console.log(`=== SERVER STARTED ===`);
     console.log(`Server running on port ${PORT}`);
-    console.log('Environment check:');
-    console.log('FIREBASE_API_KEY:', process.env.FIREBASE_API_KEY ? 'LOADED' : 'NOT LOADED');
-    console.log('ADMIN_PASSWORD:', process.env.ADMIN_PASSWORD ? 'LOADED' : 'NOT LOADED');
-    console.log('======================');
+    console.log('Available env vars:', Object.keys(process.env).filter(k => k.startsWith('FIREBASE') || k === 'ADMIN_PASSWORD'));
+    console.log('FIREBASE_API_KEY:', process.env.FIREBASE_API_KEY || 'NOT FOUND');
+    console.log('ADMIN_PASSWORD:', process.env.ADMIN_PASSWORD || 'NOT FOUND');
 });
