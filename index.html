@@ -663,6 +663,11 @@
     </div>
 
     <script>
+        // Define API_BASE_URL globally
+        window.API_BASE_URL = 'https://sambhuganesan-github-io.onrender.com';
+    </script>
+
+    <script>
         // Global state for admin access
         window.isAdmin = false;
 
@@ -672,7 +677,7 @@
             if (!pass) return;
 
             try {
-                const response = await fetch(`${API_BASE_URL}/api/verify-admin`, {
+                const response = await fetch(`${window.API_BASE_URL}/api/verify-admin`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -780,8 +785,6 @@
     </script>
 
     <script type="module">
-        const API_BASE_URL = 'https://sambhuganesan-github-io.onrender.com';
-
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
         // ADDED doc, updateDoc, deleteDoc, getDoc
         import { getFirestore, collection, addDoc, getDocs, query, orderBy, Timestamp, doc, updateDoc, deleteDoc, getDoc }
@@ -791,7 +794,7 @@
 
         async function initializeFirebase() {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/config`);
+                const response = await fetch(`${window.API_BASE_URL}/api/config`);
                 const firebaseConfig = await response.json();
 
                 const app = initializeApp(firebaseConfig);
