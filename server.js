@@ -4,9 +4,9 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// CORS middleware - IMPORTANT for GitHub Pages to access your API
+// CORS middleware
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*'); // Or specify your GitHub Pages URL
+    res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     if (req.method === 'OPTIONS') {
@@ -15,16 +15,18 @@ app.use((req, res, next) => {
     next();
 });
 
-// JSON parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Serve static files (optional, since your HTML will be on GitHub Pages)
 app.use(express.static(__dirname));
 
-// API endpoint for Firebase config
+// API endpoint for Firebase config with detailed logging
 app.get('/api/config', (req, res) => {
-    res.json({
+    console.log('=== CONFIG ENDPOINT HIT ===');
+    console.log('Environment variables check:');
+    console.log('FIREBASE_API_KEY:', process.env.FIREBASE_API_KEY ? 'EXISTS' : 'MISSING');
+    console.log('FIREBASE_PROJECT_ID:', process.env.FIREBASE_PROJECT_ID ? 'EXISTS' : 'MISSING');
+
+    const config = {
         apiKey: process.env.FIREBASE_API_KEY,
         authDomain: process.env.FIREBASE_AUTH_DOMAIN,
         projectId: process.env.FIREBASE_PROJECT_ID,
@@ -32,13 +34,19 @@ app.get('/api/config', (req, res) => {
         messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
         appId: process.env.FIREBASE_APP_ID,
         measurementId: process.env.FIREBASE_MEASUREMENT_ID
-    });
+    };
+
+    console.log('Sending config:', JSON.stringify(config, null, 2));
+    res.json(config);
 });
 
 // API endpoint for admin authentication
 app.post('/api/verify-admin', (req, res) => {
+    console.log('=== VERIFY ADMIN HIT ===');
+    console.log('ADMIN_PASSWORD env:', process.env.ADMIN_PASSWORD ? 'EXISTS' : 'MISSING');
     const { password } = req.body;
     const isValid = password === process.env.ADMIN_PASSWORD;
+    console.log('Password valid:', isValid);
     res.json({ isValid });
 });
 
@@ -48,5 +56,10 @@ app.get('/health', (req, res) => {
 });
 
 app.listen(PORT, () => {
+    console.log(`=== SERVER STARTED ===`);
     console.log(`Server running on port ${PORT}`);
+    console.log('Environment check:');
+    console.log('FIREBASE_API_KEY:', process.env.FIREBASE_API_KEY ? 'LOADED' : 'NOT LOADED');
+    console.log('ADMIN_PASSWORD:', process.env.ADMIN_PASSWORD ? 'LOADED' : 'NOT LOADED');
+    console.log('======================');
 });
