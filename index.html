@@ -672,7 +672,7 @@
             if (!pass) return;
 
             try {
-                const response = await fetch('/api/verify-admin', {
+                const response = await fetch('https://sambhuganesan-github-io.onrender.com', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -789,7 +789,7 @@
 
         async function initializeFirebase() {
             try {
-                const response = await fetch('/api/config');
+                const response = await fetch('https://sambhuganesan-github-io.onrender.com');
                 const firebaseConfig = await response.json();
 
                 const app = initializeApp(firebaseConfig);
