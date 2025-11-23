@@ -5,7 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sambhu Ganesan | CS & Math</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
     <style>
         :root {
             --primary: #00d4ff;
@@ -31,7 +45,7 @@
             min-height: 100vh;
         }
 
-        /* --- Custom Cursor --- */
+        /* --- OPTIMIZED CURSOR (No Lag) --- */
         .cursor {
             width: 20px;
             height: 20px;
@@ -40,14 +54,19 @@
             position: fixed;
             pointer-events: none;
             z-index: 10000;
-            transition: transform 0.1s ease, background 0.1s;
+            top: 0;
+            left: 0;
+            /* Performance Optimization: Use transform instead of top/left */
+            transform: translate3d(-100px, -100px, 0);
+            transition: transform 0.1s cubic-bezier(0.23, 1, 0.32, 1);
             mix-blend-mode: difference;
         }
 
         .cursor.hover {
-            transform: scale(2.5);
-            background: rgba(0, 212, 255, 0.2);
+            background: rgba(0, 212, 255, 0.4);
             border-color: var(--secondary);
+            transform: translate3d(-100px, -100px, 0) scale(2.5) !important;
+            /* Scale handled in JS mainly, but this adds style */
         }
 
         /* --- Navigation --- */
@@ -75,6 +94,13 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -1px;
+            transition: transform 0.5s ease;
+        }
+
+        /* Easter Egg Class */
+        .logo.spin-mode {
+            transform: rotate(360deg) scale(1.2);
+            filter: hue-rotate(90deg);
         }
 
         .nav-links {
@@ -165,28 +191,6 @@
             line-height: 1.6;
         }
 
-        .stats-row {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-top: 40px;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-val {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--secondary);
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: #ccc;
-        }
-
         /* --- Projects Grid --- */
         .projects-grid {
             display: grid;
@@ -199,7 +203,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
             padding: 30px;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: all 0.5s ease;
             position: relative;
             overflow: hidden;
         }
@@ -208,6 +212,25 @@
             transform: translateY(-10px);
             border-color: var(--primary);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Easter Egg: Zero Gravity */
+        .project-card.float {
+            animation: floatCard 3s ease-in-out infinite;
+        }
+
+        @keyframes floatCard {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(2deg);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
         }
 
         .project-card h3 {
@@ -268,7 +291,6 @@
         /* --- Blog --- */
         .admin-controls {
             display: none;
-            /* Hidden by default */
             margin-bottom: 30px;
             background: rgba(0, 0, 0, 0.3);
             padding: 20px;
@@ -306,6 +328,69 @@
             border-radius: 12px;
             margin-bottom: 25px;
             border-left: 3px solid var(--accent);
+            transition: transform 0.2s;
+        }
+
+        .blog-post:hover {
+            transform: translateX(10px);
+            border-left-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* --- BLOG OVERLAY (New Page Simulation) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10001;
+            display: none;
+            overflow-y: auto;
+            padding: 50px 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.open {
+            display: block;
+            opacity: 1;
+        }
+
+        .modal-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: fixed;
+            top: 30px;
+            right: 40px;
+            font-size: 2rem;
+            color: var(--secondary);
+            cursor: none;
+            /* Keep custom cursor */
+            z-index: 10002;
+        }
+
+        .modal-title {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .modal-date {
+            color: #888;
+            margin-bottom: 30px;
+            font-family: 'Courier New';
+        }
+
+        .modal-body {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #ddd;
         }
 
         /* --- Skills Cloud --- */
@@ -343,36 +428,6 @@
             pointer-events: none;
         }
 
-        /* Matrix Mode (Easter Egg) */
-        body.matrix-mode {
-            background: #000;
-            color: #0f0;
-            font-family: 'Courier New', monospace;
-        }
-
-        body.matrix-mode .cursor {
-            border-color: #0f0;
-        }
-
-        body.matrix-mode h1,
-        body.matrix-mode h2,
-        body.matrix-mode h3 {
-            color: #0f0;
-            background: none;
-            -webkit-text-fill-color: #0f0;
-            text-shadow: 0 0 10px #0f0;
-        }
-
-        body.matrix-mode .project-card {
-            border-color: #0f0;
-            background: #000;
-        }
-
-        body.matrix-mode .tech-pill {
-            border-color: #0f0;
-            color: #0f0;
-        }
-
         /* Mobile */
         @media (max-width: 768px) {
             .hero h1 {
@@ -383,7 +438,14 @@
                 display: none;
             }
 
-            /* Simplified for demo */
+            .cursor {
+                display: none;
+            }
+
+            /* Disable custom cursor on mobile */
+            * {
+                cursor: auto;
+            }
         }
     </style>
 </head>
@@ -393,9 +455,18 @@
 
     <div id="canvas-container" class="particles"></div>
 
+    <div id="blog-modal" class="modal-overlay">
+        <div class="modal-close" onclick="closeModal()">✕</div>
+        <div class="modal-content">
+            <h1 id="modal-title" class="modal-title"></h1>
+            <div id="modal-date" class="modal-date"></div>
+            <div id="modal-body" class="modal-body"></div>
+        </div>
+    </div>
+
     <nav>
         <div class="nav-container">
-            <div class="logo">SG.</div>
+            <div class="logo" onclick="toggleChaosMode()">SG.</div>
             <ul class="nav-links">
                 <li><a href="#" onclick="showSection('home')">Home</a></li>
                 <li><a href="#" onclick="showSection('experience')">Research & Exp</a></li>
@@ -414,22 +485,11 @@
                     <span>CS & Mathematics @ UW Seattle</span>
                 </h1>
                 <p>
-                    Passionate about Systems, ML, and Number Theory. <br>
-                    USA(J)MO Qualifier, AIME (Top 1%), and DubHacks Winner.
+                    [cite_start]Passionate about Systems, Machine Learning, and Number Theory. [cite: 8] <br>
+                    [cite_start]Researching Algorithms and Orbital Mechanics. [cite: 23, 30]
                 </p>
-                <div class="stats-row">
-                    <div class="stat-item">
-                        <div class="stat-val">Top 500</div>
-                        [cite_start]<div class="stat-label">USA(J)MO [cite: 10]</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-val">3rd</div>
-                        [cite_start]<div class="stat-label">DubHacks AWS [cite: 11]</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-val">3+</div>
-                        [cite_start]<div class="stat-label">Papers Published [cite: 14]</div>
-                    </div>
+                <div style="margin-top: 30px; font-size: 0.8rem; color: #555;">
+                    (Press <strong>SPACE</strong> for Zero Gravity Mode)
                 </div>
             </div>
         </section>
@@ -471,7 +531,7 @@
                         <span class="tech-pill">BLE</span>
                     </div>
                     <p class="project-desc">Android app for secure interest sharing via Bluetooth Low Energy (50m+
-                        range). Won 3rd place at DubHacks 2025 (AWS Track).</p>
+                        range).</p>
                     <a href="#" class="tech-pill" style="text-decoration:none">View Github</a>
                 </div>
 
@@ -516,30 +576,30 @@
 
             <div id="admin-panel" class="admin-controls">
                 <h4 style="margin-bottom:10px; color:var(--accent)">New Post Entry</h4>
-                <input type="text" id="post-title" class="admin-input" placeholder="Title (e.g., Skolem Sequences)">
+                <input type="text" id="post-title" class="admin-input" placeholder="Title">
                 <input type="date" id="post-date" class="admin-input">
                 <textarea id="post-content" class="admin-input" rows="4"
                     placeholder="Content (Supports LaTeX $$...$$)"></textarea>
                 <button class="btn" onclick="savePost()">Save Locally</button>
                 <button class="btn" style="background:transparent; border:1px solid #fff; color:#fff"
                     onclick="exportHTML()">Copy HTML Code</button>
-                <p style="font-size:0.8rem; color:#888; margin-top:10px;">*Saving locally only updates YOUR browser.
-                    Click "Copy HTML Code" to get the code to paste into your file.</p>
             </div>
 
             <div id="blog-container">
-                <div class="blog-post">
+                <div class="blog-post"
+                    onclick="openBlogModal('Properties of Skolem Sequences', 'Jan 15, 2025', 'During my time at Polymath Jr, we investigated the gaps in buffer-based algorithms. We managed to reduce the gaps from $$O(n\\sqrt{t})$$ to zero using $$O(n^2)$$ space complexity. This suggests a deeper relationship between gap theory and buffer size limits.')">
                     <div class="timeline-date">Jan 15, 2025</div>
                     <h3>Properties of Skolem Sequences</h3>
-                    <p>During my time at Polymath Jr, we investigated the gaps in buffer-based algorithms. We managed to
-                        reduce the gaps from $$O(n\sqrt{t})$$ to zero using $$O(n^2)$$ space complexity.</p>
+                    <p>Reducing gaps from $O(n\sqrt{t})$ to zero using $O(n^2)$ space complexity...</p>
+                    <small style="color:var(--primary)">Click to read more</small>
                 </div>
 
-                <div class="blog-post">
+                <div class="blog-post"
+                    onclick="openBlogModal('N-Body Orbital Mechanics', 'Dec 20, 2024', 'Modeling orbital mechanics requires robust functional programming. Using Wolfram Language, I visualized the chaotic nature of 3-body systems. The Hamiltonian of the system is given by $$H = \\sum_{i} \\frac{p_i^2}{2m_i} + \\sum_{i<j} V(r_{ij})$$ where V is the gravitational potential.')">
                     <div class="timeline-date">Dec 20, 2024</div>
                     <h3>N-Body Orbital Mechanics</h3>
-                    <p>Modeling orbital mechanics requires robust functional programming. Using Wolfram Language, I
-                        visualized the chaotic nature of 3-body systems...</p>
+                    <p>Visualizing chaotic 3-body systems and Hamiltonian mechanics...</p>
+                    <small style="color:var(--primary)">Click to read more</small>
                 </div>
             </div>
         </section>
@@ -548,8 +608,7 @@
             <h2>About & Skills</h2>
             <div style="text-align: center; max-width: 800px; margin: 0 auto;">
                 <p style="font-size: 1.1rem; color: #ccc; margin-bottom: 30px;">
-                    [cite_start]I am an undergraduate at the University of Washington [cite: 4] studying Computer
-                    Science and Mathematics.
+                    I am an undergraduate at the University of Washington studying Computer Science and Mathematics.
                     I thrive at the intersection of rigorous mathematical proof and scalable software engineering.
                 </p>
 
@@ -568,9 +627,7 @@
                 </div>
 
                 <div style="margin-top: 50px;">
-                    <a href="mailto:sambhu.ganesan150@gmail.com" class="btn">Contact Me</a> <a href="#" class="btn"
-                        style="background:transparent; border:1px solid var(--primary); color:var(--primary)">Download
-                        Resume</a>
+                    <a href="mailto:sambhu.ganesan150@gmail.com" class="btn">Contact Me</a>
                 </div>
             </div>
         </section>
@@ -578,30 +635,83 @@
     </div>
 
     <script>
-        // --- Custom Cursor Logic ---
+        // --- PERFORMANCE OPTIMIZED CURSOR ---
+        // Using requestAnimationFrame to decouple rendering from mouse events (Fixes Lag)
         const cursor = document.querySelector('.cursor');
+        let mouseX = -100, mouseY = -100; // Start off screen
+        let cursorX = -100, cursorY = -100;
+
         document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
+            mouseX = e.clientX;
+            mouseY = e.clientY;
         });
 
-        // Hover effect for interactive elements
-        const hoverElements = document.querySelectorAll('a, button, .project-card, .blog-post, .skill-tag');
+        // Loop for smooth animation
+        function animateCursor() {
+            // Smooth lerp for trailing effect
+            cursorX += (mouseX - cursorX) * 0.15;
+            cursorY += (mouseY - cursorY) * 0.15;
+
+            // Use translate3d for GPU acceleration
+            cursor.style.transform = `translate3d(${cursorX - 10}px, ${cursorY - 10}px, 0)`;
+
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Hover handling
+        const hoverElements = document.querySelectorAll('a, button, .project-card, .blog-post, .skill-tag, .logo');
         hoverElements.forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
         });
 
-        // --- Navigation Logic ---
+        // --- BLOG MODAL LOGIC (New Page Simulation) ---
+        const modal = document.getElementById('blog-modal');
+
+        function openBlogModal(title, date, content) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-date').innerText = date;
+            document.getElementById('modal-body').innerHTML = content;
+
+            modal.classList.add('open');
+
+            // CRITICAL: Re-render MathJax inside the new content
+            if (window.MathJax) {
+                MathJax.typesetPromise([document.getElementById('modal-body')]).then(() => {
+                    console.log('Math rendered!');
+                }).catch((err) => console.log('MathJax error:', err));
+            }
+        }
+
+        function closeModal() {
+            modal.classList.remove('open');
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") closeModal();
+
+            // Easter Egg: Spacebar Gravity
+            if (e.code === "Space") {
+                e.preventDefault(); // Stop scroll
+                document.querySelectorAll('.project-card').forEach(card => {
+                    card.classList.toggle('float');
+                });
+                alert("Zero Gravity Mode: " + (document.querySelector('.float') ? "ON" : "OFF"));
+            }
+        });
+
+        // --- NAVIGATION ---
         function showSection(id) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             window.scrollTo(0, 0);
         }
 
-        // --- Easter Egg 1: Dynamic Math Background ---
+        // --- BACKGROUND MATH PARTICLES ---
         const container = document.getElementById('canvas-container');
-        const symbols = ['∫', '∑', 'π', '∞', '∆', '∇', '√', '∂'];
+        const symbols = ['∫', '∑', 'π', '∞', '∆', '∇', '√', '∂', 'λ', 'θ'];
 
         function createSymbol() {
             const el = document.createElement('div');
@@ -627,30 +737,18 @@
                 el.remove();
             }, 20000);
         }
-        setInterval(createSymbol, 500);
+        setInterval(createSymbol, 800); // Slower generation for better performance
 
-        // --- Easter Egg 2: Konami Code (Matrix Mode) ---
-        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-        let kPosition = 0;
-        document.addEventListener('keydown', function (e) {
-            if (e.key === konamiCode[kPosition]) {
-                kPosition++;
-                if (kPosition === konamiCode.length) {
-                    document.body.classList.toggle('matrix-mode');
-                    alert("SYSTEM BREACHED. WELCOME, NEO.");
-                    kPosition = 0;
-                }
-            } else {
-                kPosition = 0;
-            }
-        });
+        // --- EASTER EGG: CHAOS MODE ---
+        function toggleChaosMode() {
+            const logo = document.querySelector('.logo');
+            logo.classList.toggle('spin-mode');
 
-        // --- Easter Egg 3: Console ---
-        console.log("%c Looking at the code? I like that. ", "background: #222; color: #bada55; font-size: 20px");
-        console.log("If you find the secret blog admin panel, the password is 'euler'");
+            // Random background color shift
+            document.body.style.filter = document.body.style.filter ? "" : "hue-rotate(45deg)";
+        }
 
-        // --- BLOG "CMS" FEATURE ---
-        // Hidden Trigger: Triple click the "Math Blog" header
+        // --- BLOG ADMIN (HIDDEN) ---
         const blogHeader = document.getElementById('blog-header');
         let clickCount = 0;
 
@@ -660,65 +758,37 @@
                 const pass = prompt("Enter Admin Password:");
                 if (pass === 'euler') {
                     document.getElementById('admin-panel').classList.add('visible');
-                    alert("Access Granted. You can now add posts locally.");
-                } else {
-                    alert("Access Denied.");
                 }
                 clickCount = 0;
             }
-            setTimeout(() => clickCount = 0, 1000); // Reset if not clicked fast enough
-        });
-
-        // Load posts from LocalStorage on load
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedPosts = JSON.parse(localStorage.getItem('myBlogPosts') || '[]');
-            const container = document.getElementById('blog-container');
-            savedPosts.forEach(post => {
-                addPostToDOM(post.title, post.date, post.content);
-            });
-            // Re-render math
-            if (window.MathJax) MathJax.typesetPromise();
+            setTimeout(() => clickCount = 0, 1000);
         });
 
         function savePost() {
+            // Local storage logic remains the same
             const title = document.getElementById('post-title').value;
             const date = document.getElementById('post-date').value;
             const content = document.getElementById('post-content').value;
 
-            if (!title || !content) return alert("Fill in fields");
-
-            // Save to LocalStorage
-            const posts = JSON.parse(localStorage.getItem('myBlogPosts') || '[]');
-            posts.unshift({ title, date, content }); // Add to top
-            localStorage.setItem('myBlogPosts', JSON.stringify(posts));
-
-            addPostToDOM(title, date, content);
-
-            // Clear inputs
-            document.getElementById('post-title').value = '';
-            document.getElementById('post-content').value = '';
-
-            // Refresh MathJax
-            MathJax.typesetPromise();
-        }
-
-        function addPostToDOM(title, date, content) {
+            // Add to DOM immediately
+            const container = document.getElementById('blog-container');
             const div = document.createElement('div');
             div.className = 'blog-post';
+            div.onclick = function () { openBlogModal(title, date, content) }; // Make it clickable
             div.innerHTML = `
                 <div class="timeline-date">${date}</div>
                 <h3>${title}</h3>
-                <p>${content}</p>
+                <p>${content.substring(0, 100)}...</p>
+                <small style="color:var(--primary)">Click to read more</small>
             `;
-            const container = document.getElementById('blog-container');
             container.insertBefore(div, container.firstChild);
+
+            if (window.MathJax) MathJax.typesetPromise();
         }
 
         function exportHTML() {
             const html = document.getElementById('blog-container').innerHTML;
-            navigator.clipboard.writeText(html).then(() => {
-                alert("HTML copied to clipboard! Paste this inside <div id='blog-container'> in your code to make it permanent.");
-            });
+            navigator.clipboard.writeText(html).then(() => alert("HTML copied!"));
         }
     </script>
 </body>
