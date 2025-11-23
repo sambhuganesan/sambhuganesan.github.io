@@ -1,0 +1,29 @@
+{
+  "name": "sambhuganesan.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sambhuganesan/sambhuganesan.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sambhuganesan/sambhuganesan.github.io/issues"
+  },
+  "homepage": "https://github.com/sambhuganesan/sambhuganesan.github.io#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "firebase": "^12.6.0",
+    "firebase-admin": "^13.6.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

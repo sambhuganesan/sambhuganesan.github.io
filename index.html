@@ -33,8 +33,6 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: none;
-            /* Custom cursor everywhere */
         }
 
         body {
@@ -43,30 +41,6 @@
             color: #ffffff;
             overflow-x: hidden;
             min-height: 100vh;
-        }
-
-        /* --- OPTIMIZED CURSOR (No Lag) --- */
-        .cursor {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--primary);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 10000;
-            top: 0;
-            left: 0;
-            /* Performance Optimization: Use transform instead of top/left */
-            transform: translate3d(-100px, -100px, 0);
-            transition: transform 0.1s cubic-bezier(0.23, 1, 0.32, 1);
-            mix-blend-mode: difference;
-        }
-
-        .cursor.hover {
-            background: rgba(0, 212, 255, 0.4);
-            border-color: var(--secondary);
-            transform: translate3d(-100px, -100px, 0) scale(2.5) !important;
-            /* Scale handled in JS mainly, but this adds style */
         }
 
         /* --- Navigation --- */
@@ -94,10 +68,11 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -1px;
+            cursor: pointer;
             transition: transform 0.5s ease;
+            user-select: none;
         }
 
-        /* Easter Egg Class */
         .logo.spin-mode {
             transform: rotate(360deg) scale(1.2);
             filter: hue-rotate(90deg);
@@ -123,16 +98,16 @@
             text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
         }
 
-        /* --- Layout & Sections --- */
+        /* --- Layout --- */
         .content {
             margin-top: 80px;
             padding: 50px;
             max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 0 auto;
         }
 
         .section {
+            padding: 40px;
             display: none;
             min-height: 80vh;
             animation: fadeIn 0.6s ease;
@@ -163,7 +138,7 @@
             display: inline-block;
         }
 
-        /* --- Hero Section --- */
+        /* --- Hero --- */
         .hero {
             text-align: center;
             padding: 120px 0;
@@ -191,7 +166,7 @@
             line-height: 1.6;
         }
 
-        /* --- Projects Grid --- */
+        /* --- Projects Grid (Original UI Preserved) --- */
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -203,18 +178,19 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
             padding: 30px;
-            transition: all 0.5s ease;
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            /* Added for relative positioning of admin buttons */
+            position: relative;
         }
 
         .project-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-5px);
             border-color: var(--primary);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
-        /* Easter Egg: Zero Gravity */
         .project-card.float {
             animation: floatCard 3s ease-in-out infinite;
         }
@@ -253,6 +229,22 @@
             background: rgba(0, 212, 255, 0.1);
             color: var(--primary);
             border: 1px solid rgba(0, 212, 255, 0.2);
+            text-decoration: none;
+        }
+
+        /* Link Button Style */
+        .project-link-btn {
+            display: inline-block;
+            margin-top: 15px;
+            background: var(--primary);
+            color: #000 !important;
+            font-weight: bold;
+            text-shadow: none !important;
+        }
+
+        .project-link-btn:hover {
+            background: #fff;
+            transform: scale(1.05);
         }
 
         .project-desc {
@@ -262,7 +254,7 @@
             margin-bottom: 20px;
         }
 
-        /* --- Experience/Research Timeline --- */
+        /* --- Timeline --- */
         .timeline-item {
             padding-left: 30px;
             border-left: 2px solid var(--secondary);
@@ -288,17 +280,107 @@
             margin-bottom: 5px;
         }
 
-        /* --- Blog --- */
-        .admin-controls {
-            display: none;
-            margin-bottom: 30px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid var(--primary);
+        /* --- Blog Posts --- */
+        .blog-post {
+            background: var(--glass);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 3px solid var(--accent);
+            transition: transform 0.2s;
+            cursor: pointer;
+            /* Added for relative positioning of admin buttons */
+            position: relative;
         }
 
-        .admin-controls.visible {
+        .blog-post:hover {
+            transform: translateX(10px);
+            border-left-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* --- MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10001;
+            display: none;
+            overflow-y: auto;
+            padding: 50px 20px;
+        }
+
+        .modal-overlay.open {
+            display: block;
+        }
+
+        .modal-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: fixed;
+            top: 30px;
+            right: 40px;
+            font-size: 2rem;
+            color: var(--secondary);
+            cursor: pointer;
+            z-index: 10002;
+        }
+
+        .modal-title {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .modal-date {
+            color: #888;
+            margin-bottom: 30px;
+            font-family: 'Courier New';
+        }
+
+        .modal-body {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #ddd;
+        }
+
+        /* --- ADMIN CONTROLS (NEW) --- */
+        .admin-toggle-btn {
+            display: none;
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin-left: 20px;
+            cursor: pointer;
+            vertical-align: middle;
+        }
+
+        .admin-toggle-btn.god-mode {
+            display: inline-block !important;
+        }
+
+        .admin-panel-inline {
+            display: none;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--primary);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .admin-panel-inline.active {
             display: block;
         }
 
@@ -319,78 +401,48 @@
             padding: 10px 20px;
             font-weight: bold;
             border-radius: 5px;
-            margin-right: 10px;
+            cursor: pointer;
         }
 
-        .blog-post {
-            background: var(--glass);
-            padding: 30px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            border-left: 3px solid var(--accent);
-            transition: transform 0.2s;
-        }
-
-        .blog-post:hover {
-            transform: translateX(10px);
-            border-left-color: var(--primary);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        /* --- BLOG OVERLAY (New Page Simulation) --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 10001;
+        /* New Styles for Edit/Delete Buttons on Content */
+        .admin-controls-overlay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
             display: none;
-            overflow-y: auto;
-            padding: 50px 20px;
-            opacity: 0;
-            transition: opacity 0.3s;
+            /* Hidden by default */
         }
 
-        .modal-overlay.open {
+        .admin-controls-overlay.god-mode {
             display: block;
-            opacity: 1;
         }
 
-        .modal-content {
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .modal-close {
-            position: fixed;
-            top: 30px;
-            right: 40px;
-            font-size: 2rem;
-            color: var(--secondary);
-            cursor: none;
-            /* Keep custom cursor */
-            z-index: 10002;
-        }
-
-        .modal-title {
-            font-size: 2.5rem;
+        .admin-action-btn {
+            background: #222;
             color: var(--primary);
-            margin-bottom: 10px;
+            border: 1px solid var(--primary);
+            padding: 3px 8px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            margin-left: 5px;
+            border-radius: 4px;
+            transition: background 0.2s;
         }
 
-        .modal-date {
-            color: #888;
-            margin-bottom: 30px;
-            font-family: 'Courier New';
+        .admin-action-btn:hover {
+            background: var(--primary);
+            color: #000;
         }
 
-        .modal-body {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            color: #ddd;
+        .admin-action-btn.delete-btn {
+            color: var(--secondary);
+            border-color: var(--secondary);
+        }
+
+        .admin-action-btn.delete-btn:hover {
+            background: var(--secondary);
+            color: #000;
         }
 
         /* --- Skills Cloud --- */
@@ -416,7 +468,7 @@
             transform: scale(1.1);
         }
 
-        /* --- Particle/Math BG --- */
+        /* --- Particle BG --- */
         .particles {
             position: fixed;
             top: 0;
@@ -428,7 +480,6 @@
             pointer-events: none;
         }
 
-        /* Mobile */
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
@@ -437,22 +488,11 @@
             .nav-links {
                 display: none;
             }
-
-            .cursor {
-                display: none;
-            }
-
-            /* Disable custom cursor on mobile */
-            * {
-                cursor: auto;
-            }
         }
     </style>
 </head>
 
 <body>
-    <div class="cursor"></div>
-
     <div id="canvas-container" class="particles"></div>
 
     <div id="blog-modal" class="modal-overlay">
@@ -466,7 +506,7 @@
 
     <nav>
         <div class="nav-container">
-            <div class="logo" onclick="toggleChaosMode()">SG.</div>
+            <div class="logo" id="logo-trigger">SG.</div>
             <ul class="nav-links">
                 <li><a href="#" onclick="showSection('home')">Home</a></li>
                 <li><a href="#" onclick="showSection('experience')">Research & Exp</a></li>
@@ -485,8 +525,8 @@
                     <span>CS & Mathematics @ UW Seattle</span>
                 </h1>
                 <p>
-                    [cite_start]Passionate about Systems, Machine Learning, and Number Theory. [cite: 8] <br>
-                    [cite_start]Researching Algorithms and Orbital Mechanics. [cite: 23, 30]
+                    Passionate about Systems, Machine Learning, and Number Theory. <br>
+                    Researching Algorithms and Orbital Mechanics.
                 </p>
                 <div style="margin-top: 30px; font-size: 0.8rem; color: #555;">
                     (Press <strong>SPACE</strong> for Zero Gravity Mode)
@@ -496,111 +536,100 @@
 
         <section id="experience" class="section">
             <h2>Experience & Research</h2>
+            <button class="admin-toggle-btn" onclick="toggleAdminPanel('exp-panel')">[+ ADD EXPERIENCE]</button>
 
-            <div class="timeline-item">
-                <div class="timeline-date">Jun 2025 - Present</div>
-                <h3>Intern @ ZeroEntropy (YC Startup)</h3>
-                <p>Developing rule-based classification pipelines for patent and sports domains, improving accuracy by
-                    ~25% using NLP techniques.</p>
+            <div id="exp-panel" class="admin-panel-inline">
+                <input type="hidden" id="exp-doc-id"> <input type="text" id="exp-role" class="admin-input"
+                    placeholder="Role (e.g. Researcher)">
+                <input type="text" id="exp-company" class="admin-input" placeholder="Company/Org">
+                <input type="text" id="exp-date" class="admin-input" placeholder="Date Range (e.g. Jun 2025 - Present)">
+                <textarea id="exp-desc" class="admin-input" rows="3" placeholder="Description"></textarea>
+                <button class="btn" onclick="saveExperience()">Save Experience</button>
             </div>
 
-            <div class="timeline-item">
-                <div class="timeline-date">Jun 2024 - Jan 2025</div>
-                <h3>Researcher @ Polymath Jr. REU</h3>
-                <p>Researched Skolem Sequences under Dr. Saad Mneimneh. Discovered new properties for Restricted Sets
-                    and developed buffer-based algorithms reducing gaps from $O(n\sqrt{t})$ to zero.</p>
-            </div>
+            <div id="experience-container">
+                <div class="timeline-item">
+                    <div class="timeline-date">Jun 2025 - Present</div>
+                    <h3>Intern @ ZeroEntropy (YC Startup)</h3>
+                    <p>Developing rule-based classification pipelines for patent and sports domains, improving accuracy
+                        by ~25% using NLP techniques.</p>
+                </div>
 
-            <div class="timeline-item">
-                <div class="timeline-date">Jun 2024 - Jan 2025</div>
-                <h3>Researcher @ Wolfram Institute</h3>
-                <p>Created fractal-generation algorithms in holomorphic dynamics and modeled n-body orbital mechanics
-                    using functional programming.</p>
+                <div class="timeline-item">
+                    <div class="timeline-date">Jun 2024 - Jan 2025</div>
+                    <h3>Researcher @ Polymath Jr. REU</h3>
+                    <p>Researched Skolem Sequences under Dr. Saad Mneimneh. Discovered new properties for Restricted
+                        Sets and developed buffer-based algorithms reducing gaps from $O(n\sqrt{t})$ to zero.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Jun 2024 - Jan 2025</div>
+                    <h3>Researcher @ Wolfram Institute</h3>
+                    <p>Created fractal-generation algorithms in holomorphic dynamics and modeled n-body orbital
+                        mechanics using functional programming.</p>
+                </div>
+
             </div>
         </section>
 
         <section id="projects" class="section">
             <h2>Technical Projects</h2>
-            <div class="projects-grid">
+            <button class="admin-toggle-btn" onclick="toggleAdminPanel('proj-panel')">[+ ADD PROJECT]</button>
+
+            <div id="proj-panel" class="admin-panel-inline">
+                <input type="hidden" id="proj-doc-id"> <input type="text" id="proj-title" class="admin-input"
+                    placeholder="Project Name">
+                <input type="text" id="proj-tech" class="admin-input" placeholder="Tech Stack (comma separated)">
+                <input type="text" id="proj-link" class="admin-input" placeholder="Github/Demo Link (Optional)">
+                <textarea id="proj-desc" class="admin-input" rows="3" placeholder="Description"></textarea>
+                <button class="btn" onclick="saveProject()">Save Project</button>
+            </div>
+
+            <div class="projects-grid" id="projects-container">
 
                 <div class="project-card">
                     <h3>Bond</h3>
-                    <div class="tech-stack">
-                        <span class="tech-pill">Kotlin</span>
-                        <span class="tech-pill">AWS Bedrock</span>
-                        <span class="tech-pill">BLE</span>
-                    </div>
+                    <div class="tech-stack"><span class="tech-pill">Kotlin</span><span class="tech-pill">AWS
+                            Bedrock</span></div>
                     <p class="project-desc">Android app for secure interest sharing via Bluetooth Low Energy (50m+
                         range).</p>
-                    <a href="#" class="tech-pill" style="text-decoration:none">View Github</a>
+                    <a href="#" class="tech-pill project-link-btn" target="_blank">View Github</a>
                 </div>
 
                 <div class="project-card">
                     <h3>Spot</h3>
-                    <div class="tech-stack">
-                        <span class="tech-pill">React Native</span>
-                        <span class="tech-pill">Socket.io</span>
-                        <span class="tech-pill">MongoDB</span>
-                    </div>
+                    <div class="tech-stack"><span class="tech-pill">React Native</span><span
+                            class="tech-pill">Socket.io</span></div>
                     <p class="project-desc">Real-time parking coordination app connecting drivers leaving spots with
-                        searchers. Built scalable WebSocket backend deployed on Railway.</p>
+                        searchers.</p>
                 </div>
 
                 <div class="project-card">
                     <h3>MathScribe</h3>
-                    <div class="tech-stack">
-                        <span class="tech-pill">PyTorch</span>
-                        <span class="tech-pill">CNNs</span>
-                        <span class="tech-pill">LSTMs</span>
+                    <div class="tech-stack"><span class="tech-pill">PyTorch</span><span class="tech-pill">CNNs</span>
                     </div>
                     <p class="project-desc">Handwritten math-to-LaTeX converter using Bi-directional LSTMs and CTC loss.
-                        Custom pipeline built on CROHME 2019 dataset.</p>
-                </div>
-
-                <div class="project-card">
-                    <h3>Baseball HitTrax</h3>
-                    <div class="tech-stack">
-                        <span class="tech-pill">Python</span>
-                        <span class="tech-pill">OpenCV</span>
-                        <span class="tech-pill">Kinematics</span>
-                    </div>
-                    <p class="project-desc">Trajectory tracker using Hough Circle Detection and homography transforms to
-                        visualize 3D motion of baseballs.</p>
+                    </p>
                 </div>
 
             </div>
         </section>
 
         <section id="blog" class="section">
-            <h2 id="blog-header" style="user-select: none;">Math Blog</h2>
+            <h2>Math Blog</h2>
+            <button class="admin-toggle-btn" onclick="toggleAdminPanel('blog-panel')">[+ ADD POST]</button>
 
-            <div id="admin-panel" class="admin-controls">
-                <h4 style="margin-bottom:10px; color:var(--accent)">New Post Entry</h4>
-                <input type="text" id="post-title" class="admin-input" placeholder="Title">
+            <div id="blog-panel" class="admin-panel-inline">
+                <input type="hidden" id="post-doc-id"> <input type="text" id="post-title" class="admin-input"
+                    placeholder="Blog Title">
                 <input type="date" id="post-date" class="admin-input">
                 <textarea id="post-content" class="admin-input" rows="4"
                     placeholder="Content (Supports LaTeX $$...$$)"></textarea>
-                <button class="btn" onclick="savePost()">Save Locally</button>
-                <button class="btn" style="background:transparent; border:1px solid #fff; color:#fff"
-                    onclick="exportHTML()">Copy HTML Code</button>
+                <button class="btn" onclick="savePost()">Post Blog</button>
             </div>
 
             <div id="blog-container">
-                <div class="blog-post"
-                    onclick="openBlogModal('Properties of Skolem Sequences', 'Jan 15, 2025', 'During my time at Polymath Jr, we investigated the gaps in buffer-based algorithms. We managed to reduce the gaps from $$O(n\\sqrt{t})$$ to zero using $$O(n^2)$$ space complexity. This suggests a deeper relationship between gap theory and buffer size limits.')">
-                    <div class="timeline-date">Jan 15, 2025</div>
-                    <h3>Properties of Skolem Sequences</h3>
-                    <p>Reducing gaps from $O(n\sqrt{t})$ to zero using $O(n^2)$ space complexity...</p>
-                    <small style="color:var(--primary)">Click to read more</small>
-                </div>
-
-                <div class="blog-post"
-                    onclick="openBlogModal('N-Body Orbital Mechanics', 'Dec 20, 2024', 'Modeling orbital mechanics requires robust functional programming. Using Wolfram Language, I visualized the chaotic nature of 3-body systems. The Hamiltonian of the system is given by $$H = \\sum_{i} \\frac{p_i^2}{2m_i} + \\sum_{i<j} V(r_{ij})$$ where V is the gravitational potential.')">
-                    <div class="timeline-date">Dec 20, 2024</div>
-                    <h3>N-Body Orbital Mechanics</h3>
-                    <p>Visualizing chaotic 3-body systems and Hamiltonian mechanics...</p>
-                    <small style="color:var(--primary)">Click to read more</small>
-                </div>
+                <p style="text-align: center; color: #888;">Connecting to Neural Link...</p>
             </div>
         </section>
 
@@ -612,22 +641,21 @@
                     I thrive at the intersection of rigorous mathematical proof and scalable software engineering.
                 </p>
 
-                [cite_start]<h3 style="color:var(--primary)">Technical Arsenal [cite: 53-56]</h3>
+                <h3 style="color:var(--primary)">Technical Arsenal</h3>
                 <div class="skills-container">
-                    <span class="skill-tag">Python</span>
-                    <span class="skill-tag">C++</span>
-                    <span class="skill-tag">Java</span>
-                    <span class="skill-tag">Wolfram Language</span>
-                    <span class="skill-tag">PyTorch</span>
-                    <span class="skill-tag">React Native</span>
-                    <span class="skill-tag">AWS (Bedrock, S3, Titan)</span>
-                    <span class="skill-tag">MongoDB</span>
+                    <span class="skill-tag">Python</span><span class="skill-tag">C++</span>
+                    <span class="skill-tag">Java</span><span class="skill-tag">Wolfram Language</span>
+                    <span class="skill-tag">PyTorch</span><span class="skill-tag">React Native</span>
+                    <span class="skill-tag">AWS</span><span class="skill-tag">MongoDB</span>
                     <span class="skill-tag">LaTeX</span>
-                    <span class="skill-tag">Git</span>
                 </div>
 
                 <div style="margin-top: 50px;">
                     <a href="mailto:sambhu.ganesan150@gmail.com" class="btn">Contact Me</a>
+                </div>
+
+                <div style="margin-top: 30px; font-size: 0.8rem; color:#444; cursor: pointer" onclick="promptLogin()">
+                    [Admin Access]
                 </div>
             </div>
         </section>
@@ -635,84 +663,105 @@
     </div>
 
     <script>
-        // --- PERFORMANCE OPTIMIZED CURSOR ---
-        // Using requestAnimationFrame to decouple rendering from mouse events (Fixes Lag)
-        const cursor = document.querySelector('.cursor');
-        let mouseX = -100, mouseY = -100; // Start off screen
-        let cursorX = -100, cursorY = -100;
+        // Global state for admin access
+        window.isAdmin = false;
 
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
+        // --- AUTHENTICATION ---
+        window.promptLogin = async function () {
+            const pass = prompt("Enter Admin Code:");
+            if (!pass) return;
 
-        // Loop for smooth animation
-        function animateCursor() {
-            // Smooth lerp for trailing effect
-            cursorX += (mouseX - cursorX) * 0.15;
-            cursorY += (mouseY - cursorY) * 0.15;
+            try {
+                const response = await fetch('/api/verify-admin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ password: pass })
+                });
 
-            // Use translate3d for GPU acceleration
-            cursor.style.transform = `translate3d(${cursorX - 10}px, ${cursorY - 10}px, 0)`;
+                const data = await response.json();
 
-            requestAnimationFrame(animateCursor);
+                if (data.isValid) {
+                    alert("God Mode Active. Edit buttons enabled.");
+                    window.isAdmin = true;
+
+                    // Show all admin toggles
+                    document.querySelectorAll('.admin-toggle-btn').forEach(btn => {
+                        btn.classList.add('god-mode');
+                    });
+
+                    // Show admin controls on already loaded content
+                    document.querySelectorAll('.admin-controls-overlay').forEach(overlay => overlay.classList.add('god-mode'));
+                } else {
+                    alert("Access Denied.");
+                }
+            } catch (error) {
+                console.error("Authentication error:", error);
+                alert("Authentication failed. Please try again.");
+            }
         }
-        animateCursor();
 
-        // Hover handling
-        const hoverElements = document.querySelectorAll('a, button, .project-card, .blog-post, .skill-tag, .logo');
-        hoverElements.forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        // Logo Triple Click Trigger
+        let logoClicks = 0;
+        document.getElementById('logo-trigger').addEventListener('click', () => {
+            logoClicks++;
+            if (logoClicks === 3) {
+                window.promptLogin();
+                logoClicks = 0;
+            }
+            setTimeout(() => logoClicks = 0, 1000);
         });
 
-        // --- BLOG MODAL LOGIC (New Page Simulation) ---
-        const modal = document.getElementById('blog-modal');
+        // --- UI UTILITIES (Updated to reset form and button text) ---
+        window.toggleAdminPanel = function (id) {
+            const panel = document.getElementById(id);
+            panel.classList.toggle('active');
 
-        function openBlogModal(title, date, content) {
+            // Reset form when opening/closing
+            if (panel.classList.contains('active')) {
+                // Clear all input fields including hidden ID
+                panel.querySelectorAll('.admin-input, input[type="hidden"]').forEach(i => i.value = '');
+                // Set button text back to 'Save/Post' for a new entry
+                panel.querySelector('.btn').innerText = (id.includes('exp') ? 'Save Experience' : id.includes('proj') ? 'Save Project' : 'Post Blog');
+            }
+        }
+
+        window.openBlogModal = function (title, date, content) {
+            const modal = document.getElementById('blog-modal');
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-date').innerText = date;
             document.getElementById('modal-body').innerHTML = content;
-
             modal.classList.add('open');
-
-            // CRITICAL: Re-render MathJax inside the new content
-            if (window.MathJax) {
-                MathJax.typesetPromise([document.getElementById('modal-body')]).then(() => {
-                    console.log('Math rendered!');
-                }).catch((err) => console.log('MathJax error:', err));
-            }
+            if (window.MathJax) MathJax.typesetPromise([document.getElementById('modal-body')]);
         }
 
-        function closeModal() {
-            modal.classList.remove('open');
+        window.closeModal = function () {
+            document.getElementById('blog-modal').classList.remove('open');
         }
-
-        // Close modal on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === "Escape") closeModal();
-
-            // Easter Egg: Spacebar Gravity
-            if (e.code === "Space") {
-                e.preventDefault(); // Stop scroll
-                document.querySelectorAll('.project-card').forEach(card => {
-                    card.classList.toggle('float');
-                });
-                alert("Zero Gravity Mode: " + (document.querySelector('.float') ? "ON" : "OFF"));
-            }
-        });
 
         // --- NAVIGATION ---
-        function showSection(id) {
+        window.showSection = function (id) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             window.scrollTo(0, 0);
         }
 
-        // --- BACKGROUND MATH PARTICLES ---
+        // --- GRAVITY / SPACEBAR FIX ---
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") closeModal();
+
+            // Check if user is typing in an input field
+            const tag = document.activeElement.tagName;
+            if (e.code === "Space" && tag !== 'INPUT' && tag !== 'TEXTAREA') {
+                e.preventDefault();
+                document.querySelectorAll('.project-card').forEach(card => card.classList.toggle('float'));
+            }
+        });
+
+        // Particles
         const container = document.getElementById('canvas-container');
         const symbols = ['∫', '∑', 'π', '∞', '∆', '∇', '√', '∂', 'λ', 'θ'];
-
         function createSymbol() {
             const el = document.createElement('div');
             el.innerText = symbols[Math.floor(Math.random() * symbols.length)];
@@ -723,73 +772,263 @@
             el.style.opacity = '0';
             el.style.transition = `top ${Math.random() * 10 + 10}s linear, opacity 1s`;
             el.style.top = '100vh';
-
             container.appendChild(el);
-
-            // Trigger animation
-            setTimeout(() => {
-                el.style.opacity = '0.3';
-                el.style.top = '-10vh';
-            }, 100);
-
-            // Cleanup
-            setTimeout(() => {
-                el.remove();
-            }, 20000);
+            setTimeout(() => { el.style.opacity = '0.3'; el.style.top = '-10vh'; }, 100);
+            setTimeout(() => { el.remove(); }, 20000);
         }
-        setInterval(createSymbol, 800); // Slower generation for better performance
+        setInterval(createSymbol, 800);
+    </script>
 
-        // --- EASTER EGG: CHAOS MODE ---
-        function toggleChaosMode() {
-            const logo = document.querySelector('.logo');
-            logo.classList.toggle('spin-mode');
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        // ADDED doc, updateDoc, deleteDoc, getDoc
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, Timestamp, doc, updateDoc, deleteDoc, getDoc }
+            from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
-            // Random background color shift
-            document.body.style.filter = document.body.style.filter ? "" : "hue-rotate(45deg)";
-        }
+        let db;
 
-        // --- BLOG ADMIN (HIDDEN) ---
-        const blogHeader = document.getElementById('blog-header');
-        let clickCount = 0;
+        async function initializeFirebase() {
+            try {
+                const response = await fetch('/api/config');
+                const firebaseConfig = await response.json();
 
-        blogHeader.addEventListener('click', () => {
-            clickCount++;
-            if (clickCount === 3) {
-                const pass = prompt("Enter Admin Password:");
-                if (pass === 'euler') {
-                    document.getElementById('admin-panel').classList.add('visible');
-                }
-                clickCount = 0;
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+
+                // Load all data after Firebase is initialized
+                await loadPosts();
+                await loadProjects();
+                await loadExperience();
+
+            } catch (error) {
+                console.error("Failed to initialize Firebase:", error);
+                document.getElementById('blog-container').innerHTML = '<p style="color: red;">Failed to load Firebase configuration.</p>';
             }
-            setTimeout(() => clickCount = 0, 1000);
-        });
+        }
 
-        function savePost() {
-            // Local storage logic remains the same
+        // Helper to generate admin buttons
+        function getAdminControls(id, type) {
+            return `
+                <div class="admin-controls-overlay ${window.isAdmin ? 'god-mode' : ''}">
+                    <button class="admin-action-btn edit-btn" onclick="edit${type}('${id}')">Edit</button>
+                    <button class="admin-action-btn delete-btn" onclick="delete${type}('${id}')">Delete</button>
+                </div>
+            `;
+        }
+
+
+        // --- LOAD DATA (UPDATED to include admin controls and ID) ---
+        async function loadPosts() {
+            const container = document.getElementById('blog-container');
+            try {
+                const q = query(collection(db, "posts"), orderBy("date", "desc"));
+                const querySnapshot = await getDocs(q);
+                if (!querySnapshot.empty) container.innerHTML = '';
+                querySnapshot.forEach((doc) => {
+                    const post = doc.data();
+                    const id = doc.id; // Get Document ID
+                    const div = document.createElement('div');
+                    div.className = 'blog-post';
+                    div.setAttribute('data-id', id);
+
+                    // Use closure to properly handle modal open on click
+                    const clickHandler = () => window.openBlogModal(post.title, post.date, post.content);
+
+                    div.innerHTML = `
+                        ${getAdminControls(id, 'Post')}
+                        <div class="timeline-date">${post.date}</div><h3>${post.title}</h3><p>${post.content.substring(0, 100)}...</p>
+                    `;
+
+                    // FIX: Event listener to allow modal click AND prevent modal opening when admin button is clicked
+                    div.addEventListener('click', (e) => {
+                        if (!e.target.classList.contains('admin-action-btn')) {
+                            clickHandler();
+                        }
+                    });
+
+                    container.appendChild(div);
+                });
+                if (window.MathJax) MathJax.typesetPromise();
+            } catch (e) { console.log("Blog load empty: " + e); }
+        }
+
+        async function loadProjects() {
+            const container = document.getElementById('projects-container');
+            try {
+                const q = query(collection(db, "projects"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                querySnapshot.forEach((doc) => {
+                    const proj = doc.data();
+                    const id = doc.id; // Get Document ID
+                    const div = document.createElement('div');
+                    div.className = 'project-card';
+                    div.setAttribute('data-id', id);
+
+                    let techStackHtml = proj.tech.split(',').map(t => `<span class="tech-pill">${t.trim()}</span>`).join('');
+                    let linkHtml = '';
+                    if (proj.link && proj.link.trim() !== '') {
+                        linkHtml = `<a href="${proj.link}" target="_blank" class="tech-pill project-link-btn">View Project</a>`;
+                    }
+
+                    div.innerHTML = `
+                        ${getAdminControls(id, 'Project')}
+                        <h3>${proj.title}</h3>
+                        <div class="tech-stack">${techStackHtml}</div>
+                        <p class="project-desc">${proj.desc}</p>
+                        ${linkHtml}
+                    `;
+                    container.insertBefore(div, container.firstChild);
+                });
+            } catch (e) { console.log("Projects load empty: " + e); }
+        }
+
+        async function loadExperience() {
+            const container = document.getElementById('experience-container');
+            try {
+                const q = query(collection(db, "experience"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                querySnapshot.forEach((doc) => {
+                    const exp = doc.data();
+                    const id = doc.id; // Get Document ID
+                    const div = document.createElement('div');
+                    div.className = 'timeline-item';
+                    div.setAttribute('data-id', id);
+                    div.style.borderLeftColor = "var(--primary)";
+                    div.innerHTML = `
+                        ${getAdminControls(id, 'Experience')}
+                        <div class="timeline-date">${exp.date}</div><h3>${exp.role} @ ${exp.company}</h3><p>${exp.desc}</p>
+                    `;
+                    container.insertBefore(div, container.firstChild);
+                });
+            } catch (e) { console.log("Exp load empty: " + e); }
+        }
+
+        // --- EDIT FUNCTIONS (NEW) ---
+        window.editPost = async function (id) {
+            window.toggleAdminPanel('blog-panel');
+            const postDoc = await getDoc(doc(db, "posts", id));
+            if (postDoc.exists()) {
+                const post = postDoc.data();
+                document.getElementById('post-doc-id').value = id;
+                document.getElementById('post-title').value = post.title;
+                document.getElementById('post-date').value = post.date;
+                document.getElementById('post-content').value = post.content;
+                document.querySelector('#blog-panel .btn').innerText = "Update Blog";
+            }
+        }
+
+        window.editProject = async function (id) {
+            window.toggleAdminPanel('proj-panel');
+            const projDoc = await getDoc(doc(db, "projects", id));
+            if (projDoc.exists()) {
+                const proj = projDoc.data();
+                document.getElementById('proj-doc-id').value = id;
+                document.getElementById('proj-title').value = proj.title;
+                document.getElementById('proj-tech').value = proj.tech;
+                document.getElementById('proj-link').value = proj.link || '';
+                document.getElementById('proj-desc').value = proj.desc;
+                document.querySelector('#proj-panel .btn').innerText = "Update Project";
+            }
+        }
+
+        window.editExperience = async function (id) {
+            window.toggleAdminPanel('exp-panel');
+            const expDoc = await getDoc(doc(db, "experience", id));
+            if (expDoc.exists()) {
+                const exp = expDoc.data();
+                document.getElementById('exp-doc-id').value = id;
+                document.getElementById('exp-role').value = exp.role;
+                document.getElementById('exp-company').value = exp.company;
+                document.getElementById('exp-date').value = exp.date;
+                document.getElementById('exp-desc').value = exp.desc;
+                document.querySelector('#exp-panel .btn').innerText = "Update Experience";
+            }
+        }
+
+        // --- DELETE FUNCTIONS (NEW) ---
+        window.deletePost = async function (id) {
+            if (confirm("Are you sure you want to delete this blog post?")) {
+                await deleteDoc(doc(db, "posts", id));
+                alert("Post Deleted!"); location.reload();
+            }
+        }
+        window.deleteProject = async function (id) {
+            if (confirm("Are you sure you want to delete this project?")) {
+                await deleteDoc(doc(db, "projects", id));
+                alert("Project Deleted!"); location.reload();
+            }
+        }
+        window.deleteExperience = async function (id) {
+            if (confirm("Are you sure you want to delete this experience?")) {
+                await deleteDoc(doc(db, "experience", id));
+                alert("Experience Deleted!"); location.reload();
+            }
+        }
+
+        // --- SAVE/UPDATE FUNCTIONS (MODIFIED to handle ID) ---
+        window.savePost = async function () {
+            const id = document.getElementById('post-doc-id').value;
             const title = document.getElementById('post-title').value;
             const date = document.getElementById('post-date').value;
             const content = document.getElementById('post-content').value;
+            if (!title || !date) return alert("Missing fields");
 
-            // Add to DOM immediately
-            const container = document.getElementById('blog-container');
-            const div = document.createElement('div');
-            div.className = 'blog-post';
-            div.onclick = function () { openBlogModal(title, date, content) }; // Make it clickable
-            div.innerHTML = `
-                <div class="timeline-date">${date}</div>
-                <h3>${title}</h3>
-                <p>${content.substring(0, 100)}...</p>
-                <small style="color:var(--primary)">Click to read more</small>
-            `;
-            container.insertBefore(div, container.firstChild);
-
-            if (window.MathJax) MathJax.typesetPromise();
+            try {
+                const data = { title, date, content, createdAt: Timestamp.now() };
+                if (id) {
+                    await updateDoc(doc(db, "posts", id), data);
+                    alert("Post Updated!");
+                } else {
+                    await addDoc(collection(db, "posts"), data);
+                    alert("Post Added!");
+                }
+                location.reload();
+            } catch (e) { alert("Error: " + e.message); }
         }
 
-        function exportHTML() {
-            const html = document.getElementById('blog-container').innerHTML;
-            navigator.clipboard.writeText(html).then(() => alert("HTML copied!"));
+        window.saveProject = async function () {
+            const id = document.getElementById('proj-doc-id').value;
+            const title = document.getElementById('proj-title').value;
+            const tech = document.getElementById('proj-tech').value;
+            const desc = document.getElementById('proj-desc').value;
+            const link = document.getElementById('proj-link').value;
+            if (!title) return alert("Missing fields");
+
+            try {
+                const data = { title, tech, desc, link, createdAt: Timestamp.now() };
+                if (id) {
+                    await updateDoc(doc(db, "projects", id), data);
+                    alert("Project Updated!");
+                } else {
+                    await addDoc(collection(db, "projects"), data);
+                    alert("Project Added!");
+                }
+                location.reload();
+            } catch (e) { alert("Error: " + e.message); }
         }
+
+        window.saveExperience = async function () {
+            const id = document.getElementById('exp-doc-id').value;
+            const role = document.getElementById('exp-role').value;
+            const company = document.getElementById('exp-company').value;
+            const date = document.getElementById('exp-date').value;
+            const desc = document.getElementById('exp-desc').value;
+            if (!role) return alert("Missing fields");
+
+            try {
+                const data = { role, company, date, desc, createdAt: Timestamp.now() };
+                if (id) {
+                    await updateDoc(doc(db, "experience", id), data);
+                    alert("Experience Updated!");
+                } else {
+                    await addDoc(collection(db, "experience"), data);
+                    alert("Experience Added!");
+                }
+                location.reload();
+            } catch (e) { alert("Error: " + e.message); }
+        }
+
+        initializeFirebase();
     </script>
 </body>
 
